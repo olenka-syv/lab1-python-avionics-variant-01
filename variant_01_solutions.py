@@ -51,13 +51,20 @@ def decode_servo_status(actuator_data: tuple = ("ABC", 3, 2000)) -> str:
 print(decode_servo_status())
 
 # Задача 3: Обробка буфера UART (while / else)
-def parse_uart_buffer(buffer: list) -> str:
+def parse_uart_buffer(buffer: list = [0xD2, 0xAB, 0x45]) -> str:
     """
     Послідовно вилучає перші елементи зі списку buffer за допомогою while,
     поки не зустріне заголовок 0xAA (повертає "Кадр знайдено").
     Якщо список спорожнів без виклику break -> повертає через else: "Заголовок відсутній"
     """
-    ...
+    while len(buffer) != 0:
+        if buffer[0] != 0xAA: 
+            del buffer[0]
+        else:
+            return ("Кадр знайдено")
+    else:
+        return ("Заголовок відсутній")
+print (parse_uart_buffer())
 
 # Задача 4: Аналіз тиску двигуна (enumerate / range)
 def check_engine_pressure(pressures: list) -> list | str:
