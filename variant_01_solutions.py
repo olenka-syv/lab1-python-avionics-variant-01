@@ -5,7 +5,7 @@
 """
 
 # Задача 1: Аналіз телеметрії орієнтації БПЛА (if/elif/else)
-def check_orientation(roll: float, pitch: float) -> str:
+def check_orientation(roll: float = 23, pitch: float = 45) -> str:
     """
     Перевіряє кути крен (roll) та тангаж (pitch) БПЛА.
     Межі: |roll| <= 30, |pitch| <= 20.
@@ -23,7 +23,7 @@ def check_orientation(roll: float, pitch: float) -> str:
 print(check_orientation())
 
 # Задача 2: Декодер стану сервоприводів (match-case)
-def decode_servo_status(actuator_data: tuple) -> str:
+def decode_servo_status(actuator_data: tuple = ("ABC", 3, 2000)) -> str:
     """
     Приймає кортеж (actuator_id, status_code, current_mA).
     Використовує match-case та вирази-вартові (if):
@@ -32,7 +32,23 @@ def decode_servo_status(actuator_data: tuple) -> str:
     - штатний режим -> "Привід {id} працює штатно ({current_mA} мА)"
     - за замовчуванням -> "Невідомий формат даних"
     """
-    ...
+#Не знаю, як розбирати випадок коли current_mA > 2000 та status_code == 0. 
+#На виконання обох умов не передбачено конкретної дії. 
+#Тому розібрала окремо цей case.
+#Чи є обмеження на тип даних у кортежі? Бо буде видавати помилку, якщо current_mA не буде числом. 
+#Поки не придумала як відсіяти випадки коли це не число використовуючи лише match-case...
+    match actuator_data:
+        case (actuator_id, status_code, current_mA) if current_mA > 2000 and status_code == 0:
+            return f"Обидві умови порушено, не зрозуміло що робити!"
+        case (actuator_id, status_code, current_mA) if current_mA > 2000:
+            return f"Перевантаження приводу {actuator_id}"
+        case (actuator_id, status_code, current_mA) if status_code == 0:
+            return f"Привід {actuator_id} вимкнено"
+        case (actuator_id, status_code, current_mA) if current_mA <= 2000:
+            return f"Привід {actuator_id} працює штатно ({current_mA} мА)"
+        case _:
+            return f"Невідомий формат даних"
+print(decode_servo_status())
 
 # Задача 3: Обробка буфера UART (while / else)
 def parse_uart_buffer(buffer: list) -> str:
