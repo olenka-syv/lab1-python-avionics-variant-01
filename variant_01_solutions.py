@@ -67,11 +67,19 @@ def parse_uart_buffer(buffer: list = [0xD2, 0xAB, 0x45]) -> str:
 print (parse_uart_buffer())
 
 # Задача 4: Аналіз тиску двигуна (enumerate / range)
-def check_engine_pressure(pressures: list) -> list | str:
+def check_engine_pressure(pressures: list = [100, 200, 300, 50]) -> list | str:
     """
     Перебирає список тисків за допомогою enumerate.
     Збирає кортежі (індекс, значення) для всіх тисків < 150 кПа.
     Якщо є аномалії -> повертає список кортежів [(idx, val), ...].
     Якщо тиск всюди в нормі -> повертає "Тиск у нормі".
     """
-    ...
+    problems = []
+    for (index, value) in enumerate(pressures):
+        if value < 150:
+            problems.append((index, value))
+    if len(problems) > 0:
+        return (problems)
+    else:
+        return ("Тиск у нормі")
+print(check_engine_pressure())
